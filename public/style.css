@@ -4,7 +4,7 @@
    Accent: Teal #4DD2A7 on dark
    ============================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Noto+Serif+KR:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Noto+Serif+KR:wght@400;700&family=Playfair+Display:wght@400;700&display=swap');
 @import url('https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap');
 
 *, *::before, *::after {
@@ -330,6 +330,11 @@ ul { list-style: none; }
   margin-bottom: 28px;
   letter-spacing: -0.02em;
   word-break: keep-all;
+}
+
+.hero h1 .ai-text {
+  font-family: 'Playfair Display', Georgia, serif;
+  letter-spacing: 0.02em;
 }
 
 .hero h1 em {
