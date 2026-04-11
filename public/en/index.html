@@ -422,7 +422,7 @@
       });
     });
 
-    // Generative sphere animation — 3D particle sphere with orbital rings & flowing curves
+    // Hero animation: mouse-reactive dot grid + autonomous 3D sphere
     (function() {
       var canvas = document.getElementById('heroCanvas');
       if (!canvas) return;
@@ -434,6 +434,79 @@
       var PI = Math.PI;
       var TAU = PI * 2;
 
+      // --- Dot grid ---
+      var gridDots = [];
+      var GRID_SPACING = 40;
+
+      function initGrid() {
+        gridDots = [];
+        var cols = Math.ceil(W / GRID_SPACING) + 1;
+        var rows = Math.ceil(H / GRID_SPACING) + 1;
+        for (var r = 0; r < rows; r++) {
+          for (var c = 0; c < cols; c++) {
+            gridDots.push({
+              baseX: c * GRID_SPACING,
+              baseY: r * GRID_SPACING,
+              x: c * GRID_SPACING,
+              y: r * GRID_SPACING,
+              phase: Math.random() * TAU,
+              speed: 0.3 + Math.random() * 0.4
+            });
+          }
+        }
+      }
+
+      function drawDotGrid(t) {
+        for (var i = 0; i < gridDots.length; i++) {
+          var d = gridDots[i];
+          d.x = d.baseX + Math.sin(t * 0.001 * d.speed + d.phase) * 2;
+          d.y = d.baseY + Math.cos(t * 0.001 * d.speed + d.phase * 0.7) * 2;
+
+          var dx = mouse.x - d.x;
+          var dy = mouse.y - d.y;
+          var dist = Math.sqrt(dx * dx + dy * dy);
+          var influence = Math.max(0, 1 - dist / 160);
+
+          var baseAlpha = 0.08;
+          var alpha = baseAlpha + influence * 0.45;
+          var radius = 0.8 + influence * 1.8;
+
+          if (influence > 0) {
+            ctx.fillStyle = 'rgba(77, 210, 167, ' + alpha + ')';
+          } else {
+            ctx.fillStyle = 'rgba(255, 255, 255, ' + baseAlpha + ')';
+          }
+          ctx.beginPath();
+          ctx.arc(d.x, d.y, radius, 0, TAU);
+          ctx.fill();
+
+          if (influence > 0.2) {
+            for (var j = i + 1; j < gridDots.length; j++) {
+              var d2 = gridDots[j];
+              var dx2 = d.x - d2.x;
+              var dy2 = d.y - d2.y;
+              var dist2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
+              if (dist2 < GRID_SPACING * 1.5) {
+                var mdx2 = mouse.x - d2.x;
+                var mdy2 = mouse.y - d2.y;
+                var mdist2 = Math.sqrt(mdx2 * mdx2 + mdy2 * mdy2);
+                var inf2 = Math.max(0, 1 - mdist2 / 160);
+                if (inf2 > 0.2) {
+                  var lineAlpha = Math.min(influence, inf2) * 0.2;
+                  ctx.strokeStyle = 'rgba(77, 210, 167, ' + lineAlpha + ')';
+                  ctx.lineWidth = 0.4;
+                  ctx.beginPath();
+                  ctx.moveTo(d.x, d.y);
+                  ctx.lineTo(d2.x, d2.y);
+                  ctx.stroke();
+                }
+              }
+            }
+          }
+        }
+      }
+
+      // --- Sphere ---
       var sphereDots = [];
       var SPHERE_COUNT = 280;
       var RING_COUNT = 3;
@@ -449,7 +522,8 @@
           var phi = TAU * i / golden;
           sphereDots.push({
             theta: theta, phi: phi, baseR: 1,
-            pulse: Math.random() * TAU, pulseSpeed: 0.5 + Math.random() * 1.5
+            pulse: Math.random() * TAU,
+            pulseSpeed: 0.5 + Math.random() * 1.5
           });
         }
       }
@@ -512,10 +586,19 @@
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         cx = W * 0.78; cy = H * 0.48; R = Math.min(W, H) * 0.15;
         if (W < 768) { cx = W * 0.65; cy = H * 0.35; R = Math.min(W, H) * 0.13; }
+        initGrid();
       }
 
-      function drawAxisLines(t) {
-        var rotYa = t * 0.0002, rotXa = 0.35 + Math.sin(t * 0.0001) * 0.1;
+      function drawGlow() {
+        var grad = ctx.createRadialGradient(cx, cy, R * 0.2, cx, cy, R * 1.8);
+        grad.addColorStop(0, 'rgba(77, 210, 167, 0.05)');
+        grad.addColorStop(0.5, 'rgba(77, 210, 167, 0.02)');
+        grad.addColorStop(1, 'rgba(77, 210, 167, 0)');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, W, H);
+      }
+
+      function drawAxisLines(t, rX, rY) {
         var len = R * 1.7;
         var axes = [
           { x: len, y: 0, z: 0 }, { x: -len, y: 0, z: 0 },
@@ -524,11 +607,11 @@
         ];
         ctx.lineWidth = 0.5;
         for (var i = 0; i < axes.length; i += 2) {
-          var a1 = rotateX(axes[i].x, axes[i].y, axes[i].z, rotXa);
-          a1 = rotateY(a1.x, a1.y, a1.z, rotYa);
+          var a1 = rotateX(axes[i].x, axes[i].y, axes[i].z, rX);
+          a1 = rotateY(a1.x, a1.y, a1.z, rY);
           var p1 = project(a1.x, a1.y, a1.z);
-          var a2 = rotateX(axes[i+1].x, axes[i+1].y, axes[i+1].z, rotXa);
-          a2 = rotateY(a2.x, a2.y, a2.z, rotYa);
+          var a2 = rotateX(axes[i+1].x, axes[i+1].y, axes[i+1].z, rX);
+          a2 = rotateY(a2.x, a2.y, a2.z, rY);
           var p2 = project(a2.x, a2.y, a2.z);
           ctx.strokeStyle = 'rgba(77, 210, 167, 0.12)';
           ctx.beginPath(); ctx.setLineDash([4, 8]);
@@ -538,9 +621,10 @@
       }
 
       function drawSphere(t) {
-        var rotYa = t * 0.0002, rotXa = 0.35 + Math.sin(t * 0.0001) * 0.1;
-        var mdx = (mouse.x - cx) / W, mdy = (mouse.y - cy) / H;
-        rotYa += mdx * 0.3; rotXa += mdy * 0.2;
+        // No mouse influence — autonomous rotation only
+        var rY = t * 0.0002;
+        var rX = 0.35 + Math.sin(t * 0.0001) * 0.1;
+
         var projected = [];
         for (var i = 0; i < sphereDots.length; i++) {
           var d = sphereDots[i];
@@ -549,46 +633,50 @@
           var x = r * Math.sin(d.theta) * Math.cos(d.phi);
           var y = r * Math.cos(d.theta);
           var z = r * Math.sin(d.theta) * Math.sin(d.phi);
-          var rot = rotateX(x, y, z, rotXa);
-          rot = rotateY(rot.x, rot.y, rot.z, rotYa);
+          var rot = rotateX(x, y, z, rX);
+          rot = rotateY(rot.x, rot.y, rot.z, rY);
           var p = project(rot.x, rot.y, rot.z);
           projected.push(p);
           var alpha = 0.15 + p.s * 0.5; alpha = Math.min(alpha, 0.8);
-          var size = (1 + p.s * 1.5);
-          if (rot.z > 0) { ctx.fillStyle = 'rgba(77, 210, 167, ' + (alpha * 0.9) + ')'; }
-          else { ctx.fillStyle = 'rgba(77, 210, 167, ' + (alpha * 0.3) + ')'; size *= 0.7; }
+          var size = 1 + p.s * 1.5;
+          if (rot.z > 0) {
+            ctx.fillStyle = 'rgba(77, 210, 167, ' + (alpha * 0.9) + ')';
+          } else {
+            ctx.fillStyle = 'rgba(77, 210, 167, ' + (alpha * 0.3) + ')';
+            size *= 0.7;
+          }
           ctx.beginPath(); ctx.arc(p.x, p.y, size, 0, TAU); ctx.fill();
         }
         for (var i = 0; i < projected.length; i++) {
           if (projected[i].z < 0) continue;
           for (var j = i + 1; j < projected.length; j++) {
             if (projected[j].z < 0) continue;
-            var dx = projected[i].x - projected[j].x, dy = projected[i].y - projected[j].y;
+            var dx = projected[i].x - projected[j].x;
+            var dy = projected[i].y - projected[j].y;
             var dist = Math.sqrt(dx * dx + dy * dy);
             if (dist < R * 0.18) {
-              var lineAlpha = (1 - dist / (R * 0.18)) * 0.08;
-              ctx.strokeStyle = 'rgba(77, 210, 167, ' + lineAlpha + ')';
+              ctx.strokeStyle = 'rgba(77, 210, 167, ' + ((1 - dist / (R * 0.18)) * 0.08) + ')';
               ctx.lineWidth = 0.5; ctx.beginPath();
               ctx.moveTo(projected[i].x, projected[i].y);
               ctx.lineTo(projected[j].x, projected[j].y); ctx.stroke();
             }
           }
         }
-        return { rotX: rotXa, rotY: rotYa };
+        return { rotX: rX, rotY: rY };
       }
 
-      function drawRings(t, rotXa, rotYa) {
+      function drawRings(t, rX, rY) {
         for (var r = 0; r < rings.length; r++) {
           var ring = rings[r];
           var angleOffset = t * 0.001 * ring.speed + ring.offset;
           ctx.beginPath(); ctx.strokeStyle = 'rgba(77, 210, 167, 0.06)'; ctx.lineWidth = 0.8;
           for (var s = 0; s <= 64; s++) {
             var a = (TAU / 64) * s;
-            var rx = Math.cos(a) * R * ring.radius, ry = Math.sin(a) * R * ring.radius, rz = 0;
-            var rot = rotateX(rx, ry, rz, ring.tiltX);
+            var rx = Math.cos(a) * R * ring.radius, ry = Math.sin(a) * R * ring.radius;
+            var rot = rotateX(rx, ry, 0, ring.tiltX);
             rot = rotateZ(rot.x, rot.y, rot.z, ring.tiltZ);
-            rot = rotateX(rot.x, rot.y, rot.z, rotXa);
-            rot = rotateY(rot.x, rot.y, rot.z, rotYa);
+            rot = rotateX(rot.x, rot.y, rot.z, rX);
+            rot = rotateY(rot.x, rot.y, rot.z, rY);
             var p = project(rot.x, rot.y, rot.z);
             if (s === 0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y);
           }
@@ -596,11 +684,11 @@
           for (var p = 0; p < ring.particles.length; p++) {
             var part = ring.particles[p];
             var a = part.angle + angleOffset;
-            var rx = Math.cos(a) * R * ring.radius, ry = Math.sin(a) * R * ring.radius, rz = 0;
-            var rot = rotateX(rx, ry, rz, ring.tiltX);
+            var rx = Math.cos(a) * R * ring.radius, ry = Math.sin(a) * R * ring.radius;
+            var rot = rotateX(rx, ry, 0, ring.tiltX);
             rot = rotateZ(rot.x, rot.y, rot.z, ring.tiltZ);
-            rot = rotateX(rot.x, rot.y, rot.z, rotXa);
-            rot = rotateY(rot.x, rot.y, rot.z, rotYa);
+            rot = rotateX(rot.x, rot.y, rot.z, rX);
+            rot = rotateY(rot.x, rot.y, rot.z, rY);
             var proj = project(rot.x, rot.y, rot.z);
             var alpha = part.alpha * proj.s;
             if (rot.z < 0) alpha *= 0.3;
@@ -610,7 +698,7 @@
         }
       }
 
-      function drawFlowingCurves(t) {
+      function drawFlowingCurves(t, rX, rY) {
         for (var c = 0; c < CURVE_COUNT; c++) {
           var offset = (TAU / CURVE_COUNT) * c;
           var phase = t * 0.0004 + offset;
@@ -621,11 +709,8 @@
             var frac = s / 80, a = phase + frac * PI * 2.5;
             var spiralR = R * (0.6 + frac * 1.0);
             var waveY = Math.sin(a * 2 + phase) * R * 0.3;
-            var x = Math.cos(a) * spiralR, y = waveY, z = Math.sin(a) * spiralR;
-            var rotXa = 0.35 + Math.sin(t * 0.0001) * 0.1;
-            var rotYa = t * 0.0002 + (mouse.x - cx) / W * 0.3;
-            var rot = rotateX(x, y, z, rotXa);
-            rot = rotateY(rot.x, rot.y, rot.z, rotYa);
+            var rot = rotateX(Math.cos(a) * spiralR, waveY, Math.sin(a) * spiralR, rX);
+            rot = rotateY(rot.x, rot.y, rot.z, rY);
             var p = project(rot.x, rot.y, rot.z);
             if (s === 0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y);
           }
@@ -633,17 +718,15 @@
         }
       }
 
-      function drawLabels(t) {
-        var rotYa = t * 0.0002 + (mouse.x - cx) / W * 0.3;
-        var rotXa = 0.35 + Math.sin(t * 0.0001) * 0.1 + (mouse.y - cy) / H * 0.2;
+      function drawLabels(t, rX, rY) {
         ctx.font = '10px Satoshi, monospace';
         for (var i = 0; i < labels.length; i++) {
           var l = labels[i], lr = R * 1.15;
           var x = lr * Math.sin(l.theta) * Math.cos(l.phi);
           var y = lr * Math.cos(l.theta);
           var z = lr * Math.sin(l.theta) * Math.sin(l.phi);
-          var rot = rotateX(x, y, z, rotXa);
-          rot = rotateY(rot.x, rot.y, rot.z, rotYa);
+          var rot = rotateX(x, y, z, rX);
+          rot = rotateY(rot.x, rot.y, rot.z, rY);
           if (rot.z < 0) continue;
           var p = project(rot.x, rot.y, rot.z);
           var alpha = 0.25 + p.s * 0.15;
@@ -657,34 +740,41 @@
         }
       }
 
-      function drawGlow() {
-        var grad = ctx.createRadialGradient(cx, cy, R * 0.2, cx, cy, R * 1.8);
-        grad.addColorStop(0, 'rgba(77, 210, 167, 0.05)');
-        grad.addColorStop(0.5, 'rgba(77, 210, 167, 0.02)');
-        grad.addColorStop(1, 'rgba(77, 210, 167, 0)');
-        ctx.fillStyle = grad; ctx.fillRect(0, 0, W, H);
-      }
-
       function draw(t) {
         ctx.clearRect(0, 0, W, H);
-        drawGlow(); drawAxisLines(t); drawFlowingCurves(t);
+        drawDotGrid(t);
+        drawGlow();
+        var rX = 0.35 + Math.sin(t * 0.0001) * 0.1;
+        var rY = t * 0.0002;
+        drawAxisLines(t, rX, rY);
+        drawFlowingCurves(t, rX, rY);
         var rot = drawSphere(t);
-        drawRings(t, rot.rotX, rot.rotY); drawLabels(t);
+        drawRings(t, rot.rotX, rot.rotY);
+        drawLabels(t, rot.rotX, rot.rotY);
         raf = requestAnimationFrame(draw);
       }
 
       canvas.parentElement.addEventListener('mousemove', function(e) {
         var rect = canvas.getBoundingClientRect();
-        mouse.x = e.clientX - rect.left; mouse.y = e.clientY - rect.top;
-      });
-      canvas.parentElement.addEventListener('mouseleave', function() {
-        mouse.x = -9999; mouse.y = -9999;
-      });
-      window.addEventListener('resize', function() {
-        cancelAnimationFrame(raf); resize(); raf = requestAnimationFrame(draw);
+        mouse.x = e.clientX - rect.left;
+        mouse.y = e.clientY - rect.top;
       });
 
-      initSphere(); initRings(); initLabels(); resize();
+      canvas.parentElement.addEventListener('mouseleave', function() {
+        mouse.x = -9999;
+        mouse.y = -9999;
+      });
+
+      window.addEventListener('resize', function() {
+        cancelAnimationFrame(raf);
+        resize();
+        raf = requestAnimationFrame(draw);
+      });
+
+      initSphere();
+      initRings();
+      initLabels();
+      resize();
       raf = requestAnimationFrame(draw);
     })();
   </script>
