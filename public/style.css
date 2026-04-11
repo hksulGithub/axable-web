@@ -1221,7 +1221,7 @@ ul { list-style: none; }
     font-size: 36px;
   }
 
-  .hero h1 br { display: none; }
+  :lang(en) .hero h1 br { display: none; }
 
   .hero-stats {
     grid-template-columns: 1fr;
