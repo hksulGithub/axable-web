@@ -329,6 +329,7 @@ ul { list-style: none; }
   color: var(--white);
   margin-bottom: 28px;
   letter-spacing: -0.02em;
+  word-break: keep-all;
 }
 
 .hero h1 em {
