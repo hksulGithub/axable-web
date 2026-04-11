@@ -422,117 +422,269 @@
       });
     });
 
-    // Hero dot grid animation
+    // Generative sphere animation — 3D particle sphere with orbital rings & flowing curves
     (function() {
       var canvas = document.getElementById('heroCanvas');
       if (!canvas) return;
       var ctx = canvas.getContext('2d');
       var dpr = window.devicePixelRatio || 1;
-      var cols, rows, spacing = 40;
-      var dots = [];
-      var mouse = { x: -1000, y: -1000 };
+      var W, H, cx, cy, R;
+      var mouse = { x: -9999, y: -9999 };
       var raf;
+      var PI = Math.PI;
+      var TAU = PI * 2;
+
+      var sphereDots = [];
+      var SPHERE_COUNT = 280;
+      var RING_COUNT = 3;
+      var rings = [];
+      var CURVE_COUNT = 5;
+      var labels = [];
+
+      function initSphere() {
+        sphereDots = [];
+        var golden = (1 + Math.sqrt(5)) / 2;
+        for (var i = 0; i < SPHERE_COUNT; i++) {
+          var theta = Math.acos(1 - 2 * (i + 0.5) / SPHERE_COUNT);
+          var phi = TAU * i / golden;
+          sphereDots.push({
+            theta: theta, phi: phi, baseR: 1,
+            pulse: Math.random() * TAU, pulseSpeed: 0.5 + Math.random() * 1.5
+          });
+        }
+      }
+
+      function initRings() {
+        rings = [];
+        var tilts = [
+          { tiltX: 0.3, tiltZ: 0.1, speed: 0.4, radius: 1.25, count: 60, offset: 0 },
+          { tiltX: -0.5, tiltZ: 0.6, speed: -0.3, radius: 1.4, count: 45, offset: PI / 3 },
+          { tiltX: 0.1, tiltZ: -0.4, speed: 0.25, radius: 1.55, count: 35, offset: PI / 1.5 }
+        ];
+        for (var r = 0; r < RING_COUNT; r++) {
+          var ring = tilts[r];
+          ring.particles = [];
+          for (var p = 0; p < ring.count; p++) {
+            ring.particles.push({
+              angle: (TAU / ring.count) * p,
+              size: 1 + Math.random() * 1.5,
+              alpha: 0.3 + Math.random() * 0.5
+            });
+          }
+          rings.push(ring);
+        }
+      }
+
+      function initLabels() {
+        labels = [
+          { theta: 0.8, phi: 1.2, text: '(78, 96)' },
+          { theta: 1.8, phi: 3.5, text: '(322, 40)' },
+          { theta: 2.4, phi: 5.1, text: '(195, 304)' },
+          { theta: 1.0, phi: 4.8, text: '(41, 217)' },
+          { theta: 2.0, phi: 0.7, text: '(256, 128)' }
+        ];
+      }
+
+      function project(x3, y3, z3) {
+        var fov = 600;
+        var scale = fov / (fov + z3);
+        return { x: cx + x3 * scale, y: cy + y3 * scale, s: scale, z: z3 };
+      }
+
+      function rotateY(x, y, z, a) {
+        var cos = Math.cos(a), sin = Math.sin(a);
+        return { x: x * cos - z * sin, y: y, z: x * sin + z * cos };
+      }
+      function rotateX(x, y, z, a) {
+        var cos = Math.cos(a), sin = Math.sin(a);
+        return { x: x, y: y * cos - z * sin, z: y * sin + z * cos };
+      }
+      function rotateZ(x, y, z, a) {
+        var cos = Math.cos(a), sin = Math.sin(a);
+        return { x: x * cos - y * sin, y: x * sin + y * cos, z: z };
+      }
 
       function resize() {
         var rect = canvas.parentElement.getBoundingClientRect();
-        canvas.width = rect.width * dpr;
-        canvas.height = rect.height * dpr;
-        canvas.style.width = rect.width + 'px';
-        canvas.style.height = rect.height + 'px';
-        ctx.scale(dpr, dpr);
-        cols = Math.ceil(rect.width / spacing) + 1;
-        rows = Math.ceil(rect.height / spacing) + 1;
-        dots = [];
-        for (var r = 0; r < rows; r++) {
-          for (var c = 0; c < cols; c++) {
-            dots.push({
-              x: c * spacing,
-              y: r * spacing,
-              baseX: c * spacing,
-              baseY: r * spacing,
-              phase: Math.random() * Math.PI * 2,
-              speed: 0.3 + Math.random() * 0.4
-            });
+        W = rect.width; H = rect.height;
+        canvas.width = W * dpr; canvas.height = H * dpr;
+        canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        cx = W * 0.62; cy = H * 0.48; R = Math.min(W, H) * 0.22;
+        if (W < 768) { cx = W * 0.5; cy = H * 0.35; R = Math.min(W, H) * 0.18; }
+      }
+
+      function drawAxisLines(t) {
+        var rotYa = t * 0.0002, rotXa = 0.35 + Math.sin(t * 0.0001) * 0.1;
+        var len = R * 1.7;
+        var axes = [
+          { x: len, y: 0, z: 0 }, { x: -len, y: 0, z: 0 },
+          { x: 0, y: len, z: 0 }, { x: 0, y: -len, z: 0 },
+          { x: 0, y: 0, z: len }, { x: 0, y: 0, z: -len }
+        ];
+        ctx.lineWidth = 0.5;
+        for (var i = 0; i < axes.length; i += 2) {
+          var a1 = rotateX(axes[i].x, axes[i].y, axes[i].z, rotXa);
+          a1 = rotateY(a1.x, a1.y, a1.z, rotYa);
+          var p1 = project(a1.x, a1.y, a1.z);
+          var a2 = rotateX(axes[i+1].x, axes[i+1].y, axes[i+1].z, rotXa);
+          a2 = rotateY(a2.x, a2.y, a2.z, rotYa);
+          var p2 = project(a2.x, a2.y, a2.z);
+          ctx.strokeStyle = 'rgba(77, 210, 167, 0.12)';
+          ctx.beginPath(); ctx.setLineDash([4, 8]);
+          ctx.moveTo(p1.x, p1.y); ctx.lineTo(p2.x, p2.y);
+          ctx.stroke(); ctx.setLineDash([]);
+        }
+      }
+
+      function drawSphere(t) {
+        var rotYa = t * 0.0002, rotXa = 0.35 + Math.sin(t * 0.0001) * 0.1;
+        var mdx = (mouse.x - cx) / W, mdy = (mouse.y - cy) / H;
+        rotYa += mdx * 0.3; rotXa += mdy * 0.2;
+        var projected = [];
+        for (var i = 0; i < sphereDots.length; i++) {
+          var d = sphereDots[i];
+          var pulse = 1 + Math.sin(t * 0.001 * d.pulseSpeed + d.pulse) * 0.04;
+          var r = R * d.baseR * pulse;
+          var x = r * Math.sin(d.theta) * Math.cos(d.phi);
+          var y = r * Math.cos(d.theta);
+          var z = r * Math.sin(d.theta) * Math.sin(d.phi);
+          var rot = rotateX(x, y, z, rotXa);
+          rot = rotateY(rot.x, rot.y, rot.z, rotYa);
+          var p = project(rot.x, rot.y, rot.z);
+          projected.push(p);
+          var alpha = 0.15 + p.s * 0.5; alpha = Math.min(alpha, 0.8);
+          var size = (1 + p.s * 1.5);
+          if (rot.z > 0) { ctx.fillStyle = 'rgba(77, 210, 167, ' + (alpha * 0.9) + ')'; }
+          else { ctx.fillStyle = 'rgba(77, 210, 167, ' + (alpha * 0.3) + ')'; size *= 0.7; }
+          ctx.beginPath(); ctx.arc(p.x, p.y, size, 0, TAU); ctx.fill();
+        }
+        for (var i = 0; i < projected.length; i++) {
+          if (projected[i].z < 0) continue;
+          for (var j = i + 1; j < projected.length; j++) {
+            if (projected[j].z < 0) continue;
+            var dx = projected[i].x - projected[j].x, dy = projected[i].y - projected[j].y;
+            var dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < R * 0.18) {
+              var lineAlpha = (1 - dist / (R * 0.18)) * 0.08;
+              ctx.strokeStyle = 'rgba(77, 210, 167, ' + lineAlpha + ')';
+              ctx.lineWidth = 0.5; ctx.beginPath();
+              ctx.moveTo(projected[i].x, projected[i].y);
+              ctx.lineTo(projected[j].x, projected[j].y); ctx.stroke();
+            }
+          }
+        }
+        return { rotX: rotXa, rotY: rotYa };
+      }
+
+      function drawRings(t, rotXa, rotYa) {
+        for (var r = 0; r < rings.length; r++) {
+          var ring = rings[r];
+          var angleOffset = t * 0.001 * ring.speed + ring.offset;
+          ctx.beginPath(); ctx.strokeStyle = 'rgba(77, 210, 167, 0.06)'; ctx.lineWidth = 0.8;
+          for (var s = 0; s <= 64; s++) {
+            var a = (TAU / 64) * s;
+            var rx = Math.cos(a) * R * ring.radius, ry = Math.sin(a) * R * ring.radius, rz = 0;
+            var rot = rotateX(rx, ry, rz, ring.tiltX);
+            rot = rotateZ(rot.x, rot.y, rot.z, ring.tiltZ);
+            rot = rotateX(rot.x, rot.y, rot.z, rotXa);
+            rot = rotateY(rot.x, rot.y, rot.z, rotYa);
+            var p = project(rot.x, rot.y, rot.z);
+            if (s === 0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y);
+          }
+          ctx.stroke();
+          for (var p = 0; p < ring.particles.length; p++) {
+            var part = ring.particles[p];
+            var a = part.angle + angleOffset;
+            var rx = Math.cos(a) * R * ring.radius, ry = Math.sin(a) * R * ring.radius, rz = 0;
+            var rot = rotateX(rx, ry, rz, ring.tiltX);
+            rot = rotateZ(rot.x, rot.y, rot.z, ring.tiltZ);
+            rot = rotateX(rot.x, rot.y, rot.z, rotXa);
+            rot = rotateY(rot.x, rot.y, rot.z, rotYa);
+            var proj = project(rot.x, rot.y, rot.z);
+            var alpha = part.alpha * proj.s;
+            if (rot.z < 0) alpha *= 0.3;
+            ctx.fillStyle = 'rgba(77, 210, 167, ' + Math.min(alpha, 0.7) + ')';
+            ctx.beginPath(); ctx.arc(proj.x, proj.y, part.size * proj.s, 0, TAU); ctx.fill();
           }
         }
       }
 
-      function draw(t) {
-        var w = canvas.width / dpr;
-        var h = canvas.height / dpr;
-        ctx.clearRect(0, 0, w, h);
-
-        for (var i = 0; i < dots.length; i++) {
-          var d = dots[i];
-          d.x = d.baseX + Math.sin(t * 0.001 * d.speed + d.phase) * 3;
-          d.y = d.baseY + Math.cos(t * 0.001 * d.speed + d.phase * 0.7) * 3;
-
-          var dx = mouse.x - d.x;
-          var dy = mouse.y - d.y;
-          var dist = Math.sqrt(dx * dx + dy * dy);
-          var influence = Math.max(0, 1 - dist / 180);
-
-          var baseAlpha = 0.12;
-          var alpha = baseAlpha + influence * 0.5;
-          var radius = 1 + influence * 2;
-
-          if (influence > 0) {
-            ctx.fillStyle = 'rgba(77, 210, 167, ' + alpha + ')';
-          } else {
-            ctx.fillStyle = 'rgba(255, 255, 255, ' + baseAlpha + ')';
-          }
-
+      function drawFlowingCurves(t) {
+        for (var c = 0; c < CURVE_COUNT; c++) {
+          var offset = (TAU / CURVE_COUNT) * c;
+          var phase = t * 0.0004 + offset;
           ctx.beginPath();
-          ctx.arc(d.x, d.y, radius, 0, Math.PI * 2);
-          ctx.fill();
-
-          if (influence > 0.2) {
-            for (var j = i + 1; j < dots.length; j++) {
-              var d2 = dots[j];
-              var dx2 = d.x - d2.x;
-              var dy2 = d.y - d2.y;
-              var dist2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
-              if (dist2 < spacing * 1.5) {
-                var mdx = mouse.x - d2.x;
-                var mdy = mouse.y - d2.y;
-                var mdist = Math.sqrt(mdx * mdx + mdy * mdy);
-                var inf2 = Math.max(0, 1 - mdist / 180);
-                if (inf2 > 0.2) {
-                  var lineAlpha = Math.min(influence, inf2) * 0.25;
-                  ctx.strokeStyle = 'rgba(77, 210, 167, ' + lineAlpha + ')';
-                  ctx.lineWidth = 0.5;
-                  ctx.beginPath();
-                  ctx.moveTo(d.x, d.y);
-                  ctx.lineTo(d2.x, d2.y);
-                  ctx.stroke();
-                }
-              }
-            }
+          ctx.strokeStyle = 'rgba(77, 210, 167, ' + (0.06 + Math.sin(phase) * 0.03) + ')';
+          ctx.lineWidth = 1.2 + Math.sin(phase * 1.3) * 0.5;
+          for (var s = 0; s <= 80; s++) {
+            var frac = s / 80, a = phase + frac * PI * 2.5;
+            var spiralR = R * (0.6 + frac * 1.0);
+            var waveY = Math.sin(a * 2 + phase) * R * 0.3;
+            var x = Math.cos(a) * spiralR, y = waveY, z = Math.sin(a) * spiralR;
+            var rotXa = 0.35 + Math.sin(t * 0.0001) * 0.1;
+            var rotYa = t * 0.0002 + (mouse.x - cx) / W * 0.3;
+            var rot = rotateX(x, y, z, rotXa);
+            rot = rotateY(rot.x, rot.y, rot.z, rotYa);
+            var p = project(rot.x, rot.y, rot.z);
+            if (s === 0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y);
           }
+          ctx.stroke();
         }
+      }
 
+      function drawLabels(t) {
+        var rotYa = t * 0.0002 + (mouse.x - cx) / W * 0.3;
+        var rotXa = 0.35 + Math.sin(t * 0.0001) * 0.1 + (mouse.y - cy) / H * 0.2;
+        ctx.font = '10px Satoshi, monospace';
+        for (var i = 0; i < labels.length; i++) {
+          var l = labels[i], lr = R * 1.15;
+          var x = lr * Math.sin(l.theta) * Math.cos(l.phi);
+          var y = lr * Math.cos(l.theta);
+          var z = lr * Math.sin(l.theta) * Math.sin(l.phi);
+          var rot = rotateX(x, y, z, rotXa);
+          rot = rotateY(rot.x, rot.y, rot.z, rotYa);
+          if (rot.z < 0) continue;
+          var p = project(rot.x, rot.y, rot.z);
+          var alpha = 0.25 + p.s * 0.15;
+          ctx.fillStyle = 'rgba(77, 210, 167, ' + alpha + ')';
+          ctx.beginPath(); ctx.arc(p.x, p.y, 2, 0, TAU); ctx.fill();
+          ctx.strokeStyle = 'rgba(77, 210, 167, ' + (alpha * 0.5) + ')';
+          ctx.lineWidth = 0.5; ctx.beginPath();
+          ctx.moveTo(p.x, p.y); ctx.lineTo(p.x + 18, p.y - 12); ctx.stroke();
+          ctx.fillStyle = 'rgba(77, 210, 167, ' + (alpha * 0.7) + ')';
+          ctx.fillText(l.text, p.x + 20, p.y - 10);
+        }
+      }
+
+      function drawGlow() {
+        var grad = ctx.createRadialGradient(cx, cy, R * 0.2, cx, cy, R * 1.8);
+        grad.addColorStop(0, 'rgba(77, 210, 167, 0.05)');
+        grad.addColorStop(0.5, 'rgba(77, 210, 167, 0.02)');
+        grad.addColorStop(1, 'rgba(77, 210, 167, 0)');
+        ctx.fillStyle = grad; ctx.fillRect(0, 0, W, H);
+      }
+
+      function draw(t) {
+        ctx.clearRect(0, 0, W, H);
+        drawGlow(); drawAxisLines(t); drawFlowingCurves(t);
+        var rot = drawSphere(t);
+        drawRings(t, rot.rotX, rot.rotY); drawLabels(t);
         raf = requestAnimationFrame(draw);
       }
 
       canvas.parentElement.addEventListener('mousemove', function(e) {
         var rect = canvas.getBoundingClientRect();
-        mouse.x = e.clientX - rect.left;
-        mouse.y = e.clientY - rect.top;
+        mouse.x = e.clientX - rect.left; mouse.y = e.clientY - rect.top;
       });
-
       canvas.parentElement.addEventListener('mouseleave', function() {
-        mouse.x = -1000;
-        mouse.y = -1000;
+        mouse.x = -9999; mouse.y = -9999;
       });
-
       window.addEventListener('resize', function() {
-        cancelAnimationFrame(raf);
-        ctx.setTransform(1, 0, 0, 1, 0, 0);
-        resize();
-        raf = requestAnimationFrame(draw);
+        cancelAnimationFrame(raf); resize(); raf = requestAnimationFrame(draw);
       });
 
-      resize();
+      initSphere(); initRings(); initLabels(); resize();
       raf = requestAnimationFrame(draw);
     })();
   </script>
