@@ -431,6 +431,7 @@
       var W, H, cx, cy, R;
       var mouse = { x: -9999, y: -9999 };
       var raf;
+      var isMobile = false;
       var PI = Math.PI;
       var TAU = PI * 2;
 
@@ -584,8 +585,9 @@
         canvas.width = W * dpr; canvas.height = H * dpr;
         canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        isMobile = W < 768;
         cx = W * 0.78; cy = H * 0.48; R = Math.min(W, H) * 0.15;
-        if (W < 768) { cx = W * 0.65; cy = H * 0.35; R = Math.min(W, H) * 0.13; }
+        if (isMobile) { cx = W * 0.65; cy = H * 0.35; R = Math.min(W, H) * 0.13; }
         initGrid();
       }
 
@@ -743,14 +745,16 @@
       function draw(t) {
         ctx.clearRect(0, 0, W, H);
         drawDotGrid(t);
-        drawGlow();
-        var rX = 0.35 + Math.sin(t * 0.0001) * 0.1;
-        var rY = t * 0.0002;
-        drawAxisLines(t, rX, rY);
-        drawFlowingCurves(t, rX, rY);
-        var rot = drawSphere(t);
-        drawRings(t, rot.rotX, rot.rotY);
-        drawLabels(t, rot.rotX, rot.rotY);
+        if (!isMobile) {
+          drawGlow();
+          var rX = 0.35 + Math.sin(t * 0.0001) * 0.1;
+          var rY = t * 0.0002;
+          drawAxisLines(t, rX, rY);
+          drawFlowingCurves(t, rX, rY);
+          var rot = drawSphere(t);
+          drawRings(t, rot.rotX, rot.rotY);
+          drawLabels(t, rot.rotX, rot.rotY);
+        }
         raf = requestAnimationFrame(draw);
       }
 
