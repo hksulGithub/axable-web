@@ -510,8 +510,8 @@
         canvas.width = W * dpr; canvas.height = H * dpr;
         canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        cx = W * 0.62; cy = H * 0.48; R = Math.min(W, H) * 0.22;
-        if (W < 768) { cx = W * 0.5; cy = H * 0.35; R = Math.min(W, H) * 0.18; }
+        cx = W * 0.78; cy = H * 0.48; R = Math.min(W, H) * 0.15;
+        if (W < 768) { cx = W * 0.65; cy = H * 0.35; R = Math.min(W, H) * 0.13; }
       }
 
       function drawAxisLines(t) {
