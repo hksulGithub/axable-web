@@ -4,28 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Axable — AI 혁신을 실행으로</title>
-  <meta name="description" content="Axable은 데이터 기반 R&D 역량과 검증된 경영 인사이트를 결합하여, 이론을 넘어 실행 가능한 AI 혁신을 이끕니다.">
-  <meta name="keywords" content="AI 컨설팅, AI 에이전트, AI 경영혁신, 데이터 분석, Axable">
+  <meta name="description" content="Axable은 데이터 기반 R&D 역량과 검증된 비즈니스 인사이트를 결합하여 이론을 넘어 실행 가능한 AI 혁신을 이끕니다.">
+  <meta name="keywords" content="AI 컨설팅, AI 에이전트, 비즈니스 혁신, 데이터 분석, Axable">
   <meta name="author" content="Axable">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="Axable — AI 혁신을 실행으로">
-  <meta property="og:description" content="전략 수립부터 시스템 구축까지, AI 경영혁신의 가장 확실한 파트너">
-  <meta property="og:url" content="https://axable.co.kr">
+  <meta property="og:description" content="전략에서 시스템까지 — AI 비즈니스 혁신의 가장 믿을 수 있는 파트너.">
+  <meta property="og:url" content="https://axable.co.kr/">
   <meta property="og:locale" content="ko_KR">
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Axable — AI 혁신을 실행으로">
-  <meta name="twitter:description" content="전략 수립부터 시스템 구축까지, AI 경영혁신의 가장 확실한 파트너">
+  <meta name="twitter:description" content="전략에서 시스템까지 — AI 비즈니스 혁신의 가장 믿을 수 있는 파트너.">
 
   <!-- Favicon -->
   <link rel="icon" href="/favicon.ico" sizes="any">
-
-  <!-- Pretendard Font -->
-  <link rel="preconnect" href="https://cdn.jsdelivr.net">
-  <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
 
   <link rel="stylesheet" href="style.css">
 </head>
@@ -34,18 +30,18 @@
   <!-- Navigation -->
   <nav class="navbar" id="navbar">
     <div class="container navbar-inner">
-      <a href="#" class="logo">ax<span>able</span></a>
+      <a href="/" class="logo">ax<span>able</span></a>
       <div class="nav-links" id="navLinks">
-        <a href="#problems">문제 인식</a>
-        <a href="#why-us">왜 Axable</a>
+        <a href="#about">소개</a>
+        <a href="#problems">문제</a>
         <a href="#services">서비스</a>
         <a href="#methodology">방법론</a>
         <a href="#team">팀</a>
         <a href="#contact">문의</a>
       </div>
       <div class="nav-right">
-        <a href="en/" class="lang-switch">EN</a>
-        <a href="#contact" class="btn btn-primary nav-cta nav-cta-desktop">상담 신청</a>
+        <a href="/en/" class="lang-switch">EN</a>
+        <a href="#contact" class="btn btn-accent nav-cta nav-cta-desktop">상담 신청</a>
         <button class="hamburger" id="hamburger" aria-label="메뉴 열기">
           <span></span>
           <span></span>
@@ -57,32 +53,38 @@
 
   <!-- Hero -->
   <section class="hero" id="home">
-    <div class="hero-bg">
-      <div class="hero-grid"></div>
-    </div>
-    <div class="hero-float" aria-hidden="true">
-      <div class="hero-float-ring"></div>
-      <div class="hero-float-ring"></div>
-      <div class="hero-float-ring"></div>
-      <div class="hero-float-dot"></div>
-      <div class="hero-float-dot"></div>
-      <div class="hero-float-dot"></div>
-    </div>
+    <canvas class="hero-canvas" id="heroCanvas"></canvas>
+    <div class="hero-overlay"></div>
+    <div class="hero-noise"></div>
     <div class="container">
       <div class="hero-content">
-        <div class="hero-label">
-          <span class="dot"></span>
+        <div class="hero-eyebrow">
+          <span class="pulse"></span>
           AI Business Innovation Partner
         </div>
-        <h1>AI 혁신을<br><em>실행</em>으로 만듭니다</h1>
+        <h1>AI 혁신을<br>실행으로, <em>함께</em></h1>
         <p class="hero-desc">
-          데이터 기반 R&D 역량과 검증된 경영 인사이트를 결합하여,
+          데이터 기반 R&D 역량과 검증된 비즈니스 인사이트를 결합하여
           이론을 넘어 실행 가능한 AI 혁신을 이끕니다.
-          전략 수립부터 시스템 구축까지, 원스톱 솔루션을 제공합니다.
+          전략 수립부터 시스템 구축까지 원스톱 솔루션을 제공합니다.
         </p>
-        <div class="btn-group">
-          <a href="#contact" class="btn btn-primary">무료 상담 신청</a>
-          <a href="#services" class="btn btn-secondary on-dark">서비스 소개</a>
+        <div class="hero-buttons">
+          <a href="#contact" class="btn btn-accent">무료 상담 신청</a>
+          <a href="#services" class="btn btn-outline">서비스 보기</a>
+        </div>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="hero-stat-number">15<span>+</span></div>
+          <div class="hero-stat-label">금융·AI 프로젝트 수행 경험</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-number">2<span>명</span></div>
+          <div class="hero-stat-label">KAIST 출신 교수 공동창업</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-number">E2E</div>
+          <div class="hero-stat-label">전략부터 시스템 구축까지</div>
         </div>
       </div>
     </div>
@@ -90,73 +92,69 @@
 
   <!-- Partners -->
   <section class="partners">
-    <div class="container">
-      <p class="partners-label">신뢰할 수 있는 파트너사</p>
-      <div class="partners-grid">
-        <span class="partner-logo">하나은행</span>
-        <span class="partner-logo">KB증권</span>
-        <span class="partner-logo">미래에셋</span>
-        <span class="partner-logo">SK C&C</span>
-        <span class="partner-logo">동양생명</span>
+    <div class="container partners-inner">
+      <span class="partners-label">주요 고객사</span>
+      <div class="partners-logos">
+        <span>하나은행</span>
+        <span>KB증권</span>
+        <span>미래에셋</span>
+        <span>SK C&C</span>
+        <span>동양생명</span>
       </div>
     </div>
   </section>
 
-  <!-- Problem Section -->
+  <!-- About -->
+  <section class="about" id="about">
+    <div class="container">
+      <div class="about-grid reveal">
+        <div class="about-left">
+          <span class="section-label">Why Axable</span>
+          <h2>AI 도입의 본질적<br>문제를 해결하는<br><em>실행 파트너</em></h2>
+        </div>
+        <div class="about-right">
+          <p>
+            많은 기업이 AI 기술을 도입하지만, 대부분 실제 비즈니스 혁신으로 이어지지 못합니다.
+            <strong>Axable</strong>은 학술적 분석 역량과 현장 실행력을 겸비한 팀으로,
+            기업의 근본적인 문제를 진단하고 AI 기반 솔루션을 직접 설계·구축합니다.
+          </p>
+          <div class="divider-line"></div>
+          <p>
+            <strong>컨설팅 보고서에 그치지 않습니다.</strong>
+            전략 수립부터 시스템 개발, 운영 지원까지 — 책임지고 실행합니다.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Problems -->
   <section class="problems" id="problems">
     <div class="container">
-      <div class="text-center reveal">
-        <span class="section-label">Problem</span>
-        <h2 class="section-title">AI 도입, 왜 실패할까요?</h2>
-        <p class="section-subtitle center">
-          많은 기업이 AI 기술을 도입하지만, 실질적인 경영 혁신으로 이어지지 못합니다.
-        </p>
-      </div>
-      <div class="problems-grid">
-        <div class="problem-card reveal reveal-delay-1">
-          <div class="problem-icon">🎯</div>
-          <h3>기술과 비즈니스의 괴리</h3>
-          <p>AI 기술 도입이 비즈니스 목표와 연결되지 않아, 투자 대비 실질적인 성과를 얻지 못합니다.</p>
+      <div class="problems-header reveal">
+        <div class="problems-header-left">
+          <span class="section-label">Problem</span>
+          <h2>AI 도입, 왜 실패하는가</h2>
         </div>
-        <div class="problem-card reveal reveal-delay-2">
-          <div class="problem-icon">🧩</div>
-          <h3>조직 복잡성 미반영</h3>
-          <p>표준화된 솔루션이 기업 고유의 조직 구조와 업무 프로세스의 복잡성을 담아내지 못합니다.</p>
-        </div>
-        <div class="problem-card reveal reveal-delay-3">
-          <div class="problem-icon">⚙️</div>
-          <h3>실행력 부재</h3>
-          <p>컨설팅 보고서는 훌륭하지만, 실제 구현 가능성을 고려하지 않아 실행으로 이어지지 않습니다.</p>
+        <div class="problems-header-right">
+          기업들이 AI 기술을 도입하지만, 대부분 실질적 비즈니스 변혁에 실패합니다.
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- Why Us -->
-  <section class="why-us" id="why-us">
-    <div class="container">
-      <div class="text-center reveal">
-        <span class="section-label">Why Axable</span>
-        <h2 class="section-title">Axable이 다른 이유</h2>
-        <p class="section-subtitle center">
-          학술적 엄밀함과 실무 실행력을 겸비한 팀이 본질적인 문제를 해결합니다.
-        </p>
-      </div>
-      <div class="why-grid">
-        <div class="why-card reveal reveal-delay-1">
-          <div class="why-number">01</div>
-          <h3>본질적 인사이트</h3>
-          <p>표면적 증상이 아닌 근본 원인을 파악합니다. 학술적 R&D 방법론으로 데이터에 기반한 정확한 문제 진단을 수행합니다.</p>
+      <div class="problems-grid stagger-children reveal">
+        <div class="problem-card">
+          <div class="problem-number">01</div>
+          <h3>기술-비즈니스 단절</h3>
+          <p>AI 도입이 비즈니스 목표와 분리되어 진행되어, 낮은 ROI와 투자 낭비로 이어집니다.</p>
         </div>
-        <div class="why-card reveal reveal-delay-2">
-          <div class="why-number">02</div>
-          <h3>검증된 솔루션</h3>
-          <p>이론에 그치지 않고, 실제 금융권 프로젝트에서 검증된 AI 아키텍처와 지속 가능한 솔루션을 설계합니다.</p>
+        <div class="problem-card">
+          <div class="problem-number">02</div>
+          <h3>조직 복잡성 무시</h3>
+          <p>범용 솔루션은 각 조직의 고유한 구조와 워크플로우 복잡성을 반영하지 못합니다.</p>
         </div>
-        <div class="why-card reveal reveal-delay-3">
-          <div class="why-number">03</div>
-          <h3>실행 중심 접근</h3>
-          <p>전략 보고서를 넘어 직접 시스템을 구축합니다. 측정 가능한 성과로 전환하는 엔지니어링 역량을 보유하고 있습니다.</p>
+        <div class="problem-card">
+          <div class="problem-number">03</div>
+          <h3>전략만 있고 실행은 없다</h3>
+          <p>컨설팅 보고서는 정교하지만, 제안 사항은 실제 구현 현실과 동떨어져 있습니다.</p>
         </div>
       </div>
     </div>
@@ -165,34 +163,32 @@
   <!-- Services -->
   <section class="services" id="services">
     <div class="container">
-      <div class="text-center reveal">
+      <div class="services-header reveal">
         <span class="section-label">Services</span>
-        <h2 class="section-title">전략부터 구현까지</h2>
-        <p class="section-subtitle center">
-          AI 경영혁신의 전 과정을 원스톱으로 지원합니다.
-        </p>
+        <h2>전략에서 시스템까지</h2>
+        <p>AI 비즈니스 혁신의 전 여정을 함께합니다.</p>
       </div>
-      <div class="services-grid">
-        <div class="service-card reveal reveal-delay-1">
-          <span class="service-phase">Phase 1 — Strategy</span>
-          <h3>AI 경영혁신 컨설팅</h3>
+      <div class="services-split reveal">
+        <div class="service-card">
+          <span class="service-phase">Phase 1 — 전략</span>
+          <h3>AI 비즈니스 컨설팅</h3>
           <p>비즈니스 본질을 변화시키는 전략 수립과 실행 로드맵을 제공합니다.</p>
           <ul class="service-list">
             <li>AI 전환 전략 수립</li>
             <li>비즈니스 프로세스 재설계 (BPR)</li>
-            <li>구현 가능한 실행 로드맵</li>
-            <li>ROI 기반 우선순위 도출</li>
+            <li>실현 가능한 구현 로드맵</li>
+            <li>ROI 기반 우선순위 설정</li>
           </ul>
         </div>
-        <div class="service-card reveal reveal-delay-2">
-          <span class="service-phase">Phase 2 — Execution</span>
-          <h3>AI 에이전트 개발 & 시스템 통합</h3>
-          <p>전략을 실제 운영 시스템으로 구현합니다.</p>
+        <div class="service-card">
+          <span class="service-phase">Phase 2 — 실행</span>
+          <h3>AI 에이전트 개발 및 통합</h3>
+          <p>전략을 운영 시스템으로 전환합니다.</p>
           <ul class="service-list">
             <li>맞춤형 AI 에이전트 개발</li>
-            <li>데이터 파이프라인 구축</li>
-            <li>기존 시스템 연동 및 통합</li>
-            <li>자동화 시스템 배포 및 운영</li>
+            <li>데이터 파이프라인 설계</li>
+            <li>레거시 시스템 통합</li>
+            <li>자동화 배포 및 운영</li>
           </ul>
         </div>
       </div>
@@ -202,28 +198,40 @@
   <!-- Methodology -->
   <section class="methodology" id="methodology">
     <div class="container">
-      <div class="text-center reveal">
+      <div class="methodology-header reveal">
         <span class="section-label">Methodology</span>
-        <h2 class="section-title">우리의 접근 방식</h2>
-        <p class="section-subtitle center">
-          체계적인 3단계 방법론으로 확실한 결과를 만들어냅니다.
-        </p>
+        <h2>우리의 접근 방식</h2>
       </div>
-      <div class="method-grid">
-        <div class="method-card reveal reveal-delay-1">
-          <div class="method-step">1</div>
-          <h3>진단 & 분석</h3>
-          <p>데이터와 현장 인터뷰를 통해 비즈니스 근본 과제를 정확히 식별합니다. 표면적 증상이 아닌 본질에 집중합니다.</p>
+      <div class="method-timeline reveal">
+        <div class="method-step">
+          <div class="method-marker">
+            <div class="method-marker-dot"></div>
+          </div>
+          <div class="method-body">
+            <span class="step-num">Step 01</span>
+            <h3>진단 및 분석</h3>
+            <p>데이터 분석과 이해관계자 인터뷰를 통해 비즈니스의 근본적인 과제를 정확히 파악합니다. 표면적 증상이 아닌 본질적 원인에 집중합니다.</p>
+          </div>
         </div>
-        <div class="method-card reveal reveal-delay-2">
-          <div class="method-step">2</div>
-          <h3>설계 & 검증</h3>
-          <p>검증된 AI 아키텍처와 도메인 전문성을 결합하여 실현 가능한 솔루션을 설계하고, 파일럿을 통해 검증합니다.</p>
+        <div class="method-step">
+          <div class="method-marker">
+            <div class="method-marker-dot"></div>
+          </div>
+          <div class="method-body">
+            <span class="step-num">Step 02</span>
+            <h3>설계 및 검증</h3>
+            <p>검증된 AI 아키텍처와 도메인 전문성을 결합하여 실현 가능한 솔루션을 설계하고, 통제된 파일럿 프로그램을 통해 검증합니다.</p>
+          </div>
         </div>
-        <div class="method-card reveal reveal-delay-3">
-          <div class="method-step">3</div>
-          <h3>구축 & 확장</h3>
-          <p>파일럿 결과를 바탕으로 전사 시스템을 구축하고, 지속적인 최적화와 확장을 지원합니다.</p>
+        <div class="method-step">
+          <div class="method-marker">
+            <div class="method-marker-dot"></div>
+          </div>
+          <div class="method-body">
+            <span class="step-num">Step 03</span>
+            <h3>구축 및 확장</h3>
+            <p>파일럿 결과를 바탕으로 전사적 시스템을 구축하고, 지속적인 최적화와 확장을 지원합니다.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -232,12 +240,14 @@
   <!-- Team -->
   <section class="team" id="team">
     <div class="container">
-      <div class="text-center reveal">
-        <span class="section-label">Team</span>
-        <h2 class="section-title">창업팀 소개</h2>
-        <p class="section-subtitle center">
-          학술적 깊이와 실무 경험을 겸비한 전문가가 직접 프로젝트를 이끕니다.
-        </p>
+      <div class="team-header reveal">
+        <div class="team-header-left">
+          <span class="section-label">Team</span>
+          <h2>창업 멤버</h2>
+        </div>
+        <div class="team-header-right">
+          <p>학술적 깊이와 현장 프로젝트 경험을 갖춘 전문가가 모든 프로젝트를 이끕니다.</p>
+        </div>
       </div>
       <div class="team-grid">
         <div class="team-card reveal reveal-delay-1">
@@ -247,11 +257,11 @@
             <li>중앙대학교 경영경제대학 교수</li>
             <li>Ph.D. Finance, University of Texas at Austin</li>
             <li>M.S. Statistics, UT Austin</li>
-            <li>B.S. Electrical Engineering, KAIST</li>
+            <li>B.S. 전기공학, KAIST</li>
           </ul>
           <p class="team-expertise">
             <strong>전문 분야:</strong> AI 에이전트 개발, 데이터 아키텍처, SI 전략<br>
-            <strong>주요 프로젝트:</strong> 하나은행 고객 리스크 프로파일링, 동양생명 시장 국면 예측, 미래에셋 OCIO 리스크 분류
+            <strong>주요 프로젝트:</strong> 하나은행 고객 리스크 프로파일링, 동양생명 시장 레짐 예측, 미래에셋 OCIO 리스크 분류
           </p>
         </div>
         <div class="team-card reveal reveal-delay-2">
@@ -260,27 +270,27 @@
           <ul class="team-credentials">
             <li>중앙대학교 경영경제대학 교수</li>
             <li>Ph.D. Finance, Indiana University at Bloomington</li>
-            <li>M.S. Business Administration, Seoul National University</li>
-            <li>B.S. Computer Science, KAIST</li>
+            <li>M.S. 경영학, 서울대학교</li>
+            <li>B.S. 컴퓨터공학, KAIST</li>
           </ul>
           <p class="team-expertise">
             <strong>전문 분야:</strong> AI 에이전트 개발, 데이터 아키텍처<br>
-            <strong>주요 프로젝트:</strong> SK C&C / KB증권 딥러닝 VWAP 매매 체결, NRF 설명가능 AI 및 심층강화학습 주가 예측
+            <strong>주요 프로젝트:</strong> SK C&C / KB증권 딥러닝 VWAP 매매체결, NRF 설명 가능 AI & 딥 RL 주가 예측
           </p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Contact CTA -->
-  <section class="contact-cta" id="contact">
+  <!-- Contact -->
+  <section class="contact" id="contact">
     <div class="container">
-      <div class="contact-inner reveal">
-        <h2>AI 혁신, 함께 시작할까요?</h2>
-        <p>프로젝트에 대해 편하게 이야기 나눠보세요. 무료 상담을 통해 최적의 방향을 제안드립니다.</p>
+      <div class="contact-content reveal">
+        <h2>AI 여정을 <em>시작</em>할<br>준비가 되셨나요?</h2>
+        <p>프로젝트에 대해 이야기해 주세요. 최적의 방향을 함께 찾기 위한 무료 상담을 제공합니다.</p>
         <div class="form-container">
           <iframe
-            data-tally-src="https://tally.so/embed/Zj5WXz?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1"
+            data-tally-src="https://tally.so/embed/wA7B6N?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1"
             loading="lazy"
             width="100%"
             height="400"
@@ -293,13 +303,35 @@
 
   <!-- Footer -->
   <footer class="footer">
-    <div class="container footer-inner">
-      <div class="footer-logo">ax<span>able</span></div>
-      <div class="footer-links">
-        <a href="https://www.aifuture.kr" target="_blank" rel="noopener">AI Future Partners</a>
-        <a href="en/">English</a>
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a href="/" class="logo">ax<span>able</span></a>
+          <p>데이터 기반 R&D와 비즈니스 인사이트를 결합한 AI 혁신 파트너.</p>
+        </div>
+        <div class="footer-col">
+          <h4>서비스</h4>
+          <a href="#services">AI 비즈니스 컨설팅</a>
+          <a href="#services">AI 에이전트 개발</a>
+          <a href="#methodology">방법론</a>
+        </div>
+        <div class="footer-col">
+          <h4>팀</h4>
+          <a href="#team">창업 멤버</a>
+          <a href="https://www.aifuture.kr" target="_blank" rel="noopener">AI Future Partners</a>
+        </div>
+        <div class="footer-col">
+          <h4>언어</h4>
+          <a href="/en/">English</a>
+        </div>
       </div>
-      <p class="footer-copy">&copy; 2025 Axable. All rights reserved.</p>
+      <div class="footer-bottom">
+        <p class="footer-copy">&copy; 2025 Axable. All rights reserved.</p>
+        <div class="footer-legal">
+          <a href="#">개인정보처리방침</a>
+          <a href="#">이용약관</a>
+        </div>
+      </div>
     </div>
   </footer>
 
@@ -341,7 +373,6 @@
       }
     });
 
-    // Close menu on link click
     navLinks.querySelectorAll('a').forEach(function(link) {
       link.addEventListener('click', function() {
         navLinks.classList.remove('active');
@@ -366,19 +397,17 @@
       observer.observe(el);
     });
 
-    // Navbar scroll effect
+    // Navbar scroll
     var navbar = document.getElementById('navbar');
     window.addEventListener('scroll', function() {
       if (window.scrollY > 50) {
-        navbar.style.background = 'rgba(255, 255, 255, 0.97)';
-        navbar.style.boxShadow = '0 1px 8px rgba(0,0,0,0.04)';
+        navbar.classList.add('scrolled');
       } else {
-        navbar.style.background = 'rgba(255, 255, 255, 0.92)';
-        navbar.style.boxShadow = 'none';
+        navbar.classList.remove('scrolled');
       }
     });
 
-    // Smooth scroll offset for fixed nav
+    // Smooth scroll offset
     document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
       anchor.addEventListener('click', function(e) {
         var target = document.querySelector(this.getAttribute('href'));
@@ -390,6 +419,123 @@
         }
       });
     });
+
+    // Hero dot grid animation
+    (function() {
+      var canvas = document.getElementById('heroCanvas');
+      if (!canvas) return;
+      var ctx = canvas.getContext('2d');
+      var dpr = window.devicePixelRatio || 1;
+      var cols, rows, spacing = 40;
+      var dots = [];
+      var mouse = { x: -1000, y: -1000 };
+      var raf;
+
+      function resize() {
+        var rect = canvas.parentElement.getBoundingClientRect();
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        canvas.style.width = rect.width + 'px';
+        canvas.style.height = rect.height + 'px';
+        ctx.scale(dpr, dpr);
+        cols = Math.ceil(rect.width / spacing) + 1;
+        rows = Math.ceil(rect.height / spacing) + 1;
+        dots = [];
+        for (var r = 0; r < rows; r++) {
+          for (var c = 0; c < cols; c++) {
+            dots.push({
+              x: c * spacing,
+              y: r * spacing,
+              baseX: c * spacing,
+              baseY: r * spacing,
+              phase: Math.random() * Math.PI * 2,
+              speed: 0.3 + Math.random() * 0.4
+            });
+          }
+        }
+      }
+
+      function draw(t) {
+        var w = canvas.width / dpr;
+        var h = canvas.height / dpr;
+        ctx.clearRect(0, 0, w, h);
+
+        for (var i = 0; i < dots.length; i++) {
+          var d = dots[i];
+          // gentle floating
+          d.x = d.baseX + Math.sin(t * 0.001 * d.speed + d.phase) * 3;
+          d.y = d.baseY + Math.cos(t * 0.001 * d.speed + d.phase * 0.7) * 3;
+
+          // mouse proximity glow
+          var dx = mouse.x - d.x;
+          var dy = mouse.y - d.y;
+          var dist = Math.sqrt(dx * dx + dy * dy);
+          var influence = Math.max(0, 1 - dist / 180);
+
+          var baseAlpha = 0.12;
+          var alpha = baseAlpha + influence * 0.5;
+          var radius = 1 + influence * 2;
+
+          if (influence > 0) {
+            ctx.fillStyle = 'rgba(77, 210, 167, ' + alpha + ')';
+          } else {
+            ctx.fillStyle = 'rgba(255, 255, 255, ' + baseAlpha + ')';
+          }
+
+          ctx.beginPath();
+          ctx.arc(d.x, d.y, radius, 0, Math.PI * 2);
+          ctx.fill();
+
+          // draw faint lines to nearby dots if mouse is close
+          if (influence > 0.2) {
+            for (var j = i + 1; j < dots.length; j++) {
+              var d2 = dots[j];
+              var dx2 = d.x - d2.x;
+              var dy2 = d.y - d2.y;
+              var dist2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
+              if (dist2 < spacing * 1.5) {
+                var mdx = mouse.x - d2.x;
+                var mdy = mouse.y - d2.y;
+                var mdist = Math.sqrt(mdx * mdx + mdy * mdy);
+                var inf2 = Math.max(0, 1 - mdist / 180);
+                if (inf2 > 0.2) {
+                  var lineAlpha = Math.min(influence, inf2) * 0.25;
+                  ctx.strokeStyle = 'rgba(77, 210, 167, ' + lineAlpha + ')';
+                  ctx.lineWidth = 0.5;
+                  ctx.beginPath();
+                  ctx.moveTo(d.x, d.y);
+                  ctx.lineTo(d2.x, d2.y);
+                  ctx.stroke();
+                }
+              }
+            }
+          }
+        }
+
+        raf = requestAnimationFrame(draw);
+      }
+
+      canvas.parentElement.addEventListener('mousemove', function(e) {
+        var rect = canvas.getBoundingClientRect();
+        mouse.x = e.clientX - rect.left;
+        mouse.y = e.clientY - rect.top;
+      });
+
+      canvas.parentElement.addEventListener('mouseleave', function() {
+        mouse.x = -1000;
+        mouse.y = -1000;
+      });
+
+      window.addEventListener('resize', function() {
+        cancelAnimationFrame(raf);
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        resize();
+        raf = requestAnimationFrame(draw);
+      });
+
+      resize();
+      raf = requestAnimationFrame(draw);
+    })();
   </script>
 </body>
 </html>
