@@ -1217,6 +1217,10 @@ ul { list-style: none; }
     display: none;
   }
 
+  .hero h1 {
+    font-size: 36px;
+  }
+
   .hero h1 br { display: none; }
 
   .hero-stats {
