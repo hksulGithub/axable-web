@@ -335,6 +335,7 @@ ul { list-style: none; }
 .hero h1 .ai-text {
   font-family: 'Playfair Display', Georgia, serif;
   letter-spacing: 0.02em;
+  margin-left: 0.05em;
 }
 
 .hero h1 em {
