@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://axable.co.kr/sitemap.xml
