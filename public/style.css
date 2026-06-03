@@ -1011,10 +1011,109 @@ ul { list-style: none; }
   margin: 0 auto;
 }
 
-.form-container iframe {
-  border: none;
+.lead-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  text-align: left;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.form-field label {
+  font-size: 0.85rem;
+  color: var(--white-70);
+  font-weight: 500;
+}
+
+.lead-form input[type="text"],
+.lead-form input[type="email"] {
   width: 100%;
+  padding: 13px 16px;
+  background: var(--white-05);
+  border: 1px solid var(--dark-border);
+  border-radius: 10px;
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.lead-form input::placeholder { color: var(--white-30); }
+
+.lead-form input:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: var(--accent-subtle);
+}
+
+.form-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.82rem;
+  color: var(--white-50);
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+.form-consent input {
+  margin-top: 3px;
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent);
+  flex-shrink: 0;
+}
+
+.lead-form .btn {
+  width: 100%;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.form-message {
+  min-height: 1em;
+  font-size: 0.85rem;
+  color: #ff8a8a;
+  margin: 0;
+}
+
+.form-success {
+  text-align: center;
+  background: var(--white-05);
+  border: 1px solid var(--dark-border-accent);
   border-radius: 12px;
+  padding: 40px 28px;
+}
+
+.form-success-check {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--dark-900);
+  font-size: 1.5rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-success h3 {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  color: var(--white);
+  margin: 0 0 8px;
+}
+
+.form-success p {
+  color: var(--white-70);
+  margin: 0;
 }
 
 /* ========== FOOTER ========== */
