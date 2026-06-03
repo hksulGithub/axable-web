@@ -1018,6 +1018,12 @@ ul { list-style: none; }
   text-align: left;
 }
 
+/* `display: flex` above overrides the [hidden] attribute's default
+   display:none, so hiding the form on success needs this explicit rule. */
+.lead-form[hidden] {
+  display: none;
+}
+
 .form-field {
   display: flex;
   flex-direction: column;
